@@ -1,0 +1,17 @@
+project:
+  name: openclaw_ml_research_assistant
+  version: 0.1
+
+paths:
+  data_dir: data/
+  logs_dir: logs/
+  reports_dir: reports/
+
+analysis:
+  max_rows_preview: 10
+  supported_formats:
+    - csv
+    - json
+
+logging:
+  level: INFO
