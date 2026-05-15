@@ -12,6 +12,7 @@ Responsibilities:
 
 from pathlib import Path
 import pandas as pd
+import logging
 
 
 class DatasetInspector:
@@ -38,7 +39,7 @@ class DatasetInspector:
                 f"Unsupported dataset format: {self.dataset_path.suffix}"
             )
 
-        print("Dataset validation successful.")
+        logging.info("Dataset validation successful.")
 
     def load_dataset(self):
         """
@@ -57,7 +58,7 @@ class DatasetInspector:
                 f"Unsupported dataset format: {self.dataset_path.suffix}"
             )
 
-        print("Dataset loaded successfully.")
+        logging.info("Dataset loaded successfully.")
         return self.dataset
 
     def show_basic_info(self):

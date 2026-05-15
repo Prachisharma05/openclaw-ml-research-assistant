@@ -7,6 +7,7 @@ Responsibilities:
 """
 
 import yaml
+import logging
 
 
 class ConfigLoader:
@@ -25,6 +26,6 @@ class ConfigLoader:
         with open(self.config_path, "r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
 
-        print("Configuration loaded successfully.")
+        logging.info("Configuration loaded successfully.")
 
         return config

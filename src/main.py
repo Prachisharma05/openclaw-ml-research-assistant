@@ -2,10 +2,33 @@ from config_generator import ConfigLoader
 from dataset_inspector import DatasetInspector
 from preprocessing_advisor import PreprocessingAdvisor
 from report_generator import ReportGenerator
+import argparse
+import logging
 
+logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+
+logger = logging.getLogger(__name__)
+
+logger.info("Pipeline execution started.")
 
 def main():
-    config_loader = ConfigLoader("configs/default_config.yaml")
+    parser = argparse.ArgumentParser(
+            description="OpenClaw ML Research Assistant"
+    )
+
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/default_config.yaml",
+        help="Path to configuration YAML file"
+    )
+
+    args = parser.parse_args()
+
+    config_loader = ConfigLoader(args.config)
     config = config_loader.load_config()
 
     dataset_path = config["dataset"]["path"]
