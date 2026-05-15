@@ -11,6 +11,7 @@ Responsibilities:
 """
 
 from pathlib import Path
+import pandas as pd
 
 
 class DatasetInspector:
@@ -43,19 +44,59 @@ class DatasetInspector:
         """
         Load dataset into memory.
         """
-        pass
+        import pandas as pd
+
+        if self.dataset_path.suffix == ".csv":
+            self.dataset = pd.read_csv(self.dataset_path)
+
+        elif self.dataset_path.suffix == ".json":
+            self.dataset = pd.read_json(self.dataset_path)
+
+        else:
+            raise ValueError(
+                f"Unsupported dataset format: {self.dataset_path.suffix}"
+            )
+
+        print("Dataset loaded successfully.")
+        return self.dataset
 
     def show_basic_info(self):
         """
         Display shape, columns, and dataset overview.
         """
-        pass
+        print("\nDataset Overview")
+        print("-" * 40)
+
+        print(f"Rows: {self.dataset.shape[0]}")
+        print(f"Columns: {self.dataset.shape[1]}")
+
+        print("\nColumn Names:")
+        print(self.dataset.columns.tolist())
+
+        print("\nData Types:")
+        print(self.dataset.dtypes)
+
+        print("\nDataset Preview:")
+        print(self.dataset.head())
 
     def detect_missing_values(self):
         """
         Analyze missing values in dataset.
         """
-        pass
+        print("\nMissing Values")
+        print("-" * 40)
+
+        missing_counts = self.dataset.isnull().sum()
+        missing_percentages = (missing_counts / len(self.dataset)) * 100
+
+        missing_report = pd.DataFrame({
+            "missing_count": missing_counts,
+            "missing_percentage": missing_percentages
+        })
+
+        print(missing_report)
+
+        return missing_report
 
     def infer_schema(self):
         """
