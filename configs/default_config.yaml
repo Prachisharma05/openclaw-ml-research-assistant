@@ -2,16 +2,23 @@ project:
   name: openclaw_ml_research_assistant
   version: 0.1
 
+dataset:
+  path: data/sample.csv
+
 paths:
   data_dir: data/
   logs_dir: logs/
   reports_dir: reports/
 
+report:
+  output_path: reports/dataset_report.txt
+
 analysis:
-  max_rows_preview: 10
-  supported_formats:
-    - csv
-    - json
+  show_basic_info: true
+  detect_missing_values: true
+  infer_schema: true
+  generate_statistics: true
+  generate_recommendations: true
 
 logging:
   level: INFO

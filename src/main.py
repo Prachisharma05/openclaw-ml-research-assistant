@@ -1,9 +1,16 @@
+from config_generator import ConfigLoader
 from dataset_inspector import DatasetInspector
-from report_generator import ReportGenerator
 from preprocessing_advisor import PreprocessingAdvisor
+from report_generator import ReportGenerator
+
 
 def main():
-    dataset_path = "data/sample.csv"
+    config_loader = ConfigLoader("configs/default_config.yaml")
+    config = config_loader.load_config()
+
+    dataset_path = config["dataset"]["path"]
+    report_output_path = config["report"]["output_path"]
+    analysis_config = config["analysis"]
 
     inspector = DatasetInspector(dataset_path)
 
@@ -11,18 +18,27 @@ def main():
 
     inspector.load_dataset()
 
-    inspector.show_basic_info()
+    if analysis_config["show_basic_info"]:
+        inspector.show_basic_info()
 
-    missing_report = inspector.detect_missing_values()
+    missing_report = None
+    schema_report = None
+    statistics_report = None
+    preprocessing_recommendations = []
 
-    schema_report = inspector.infer_schema()
+    if analysis_config["detect_missing_values"]:
+        missing_report = inspector.detect_missing_values()
 
-    statistics_report = inspector.generate_statistics()
-    
-    advisor = PreprocessingAdvisor(inspector.dataset)
-    preprocessing_recommendations = advisor.generate_recommendations()
-    
-    
+    if analysis_config["infer_schema"]:
+        schema_report = inspector.infer_schema()
+
+    if analysis_config["generate_statistics"]:
+        statistics_report = inspector.generate_statistics()
+
+    if analysis_config["generate_recommendations"]:
+        advisor = PreprocessingAdvisor(inspector.dataset)
+        preprocessing_recommendations = advisor.generate_recommendations()
+
     report_content = f"""
 DATASET INSPECTION REPORT
 ==========================
@@ -40,9 +56,7 @@ Preprocessing Recommendations:
 {chr(10).join(preprocessing_recommendations)}
 """
 
-    report_generator = ReportGenerator(
-        "reports/dataset_report.txt"
-    )
+    report_generator = ReportGenerator(report_output_path)
 
     report_generator.generate_text_report(report_content)
 
