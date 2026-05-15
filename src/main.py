@@ -1,6 +1,6 @@
 from dataset_inspector import DatasetInspector
 from report_generator import ReportGenerator
-
+from preprocessing_advisor import PreprocessingAdvisor
 
 def main():
     dataset_path = "data/sample.csv"
@@ -19,8 +19,10 @@ def main():
 
     statistics_report = inspector.generate_statistics()
     
-    preprocessing_recommendations = inspector.generate_preprocessing_recommendations()
-
+    advisor = PreprocessingAdvisor(inspector.dataset)
+    preprocessing_recommendations = advisor.generate_recommendations()
+    
+    
     report_content = f"""
 DATASET INSPECTION REPORT
 ==========================
