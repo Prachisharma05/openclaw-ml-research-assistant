@@ -4,11 +4,16 @@ from preprocessing_advisor import PreprocessingAdvisor
 from report_generator import ReportGenerator
 import argparse
 import logging
+import math
 
 logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("logs/pipeline.log"),
+        logging.StreamHandler()
+    ]
+)
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +87,51 @@ Preprocessing Recommendations:
     report_generator = ReportGenerator(report_output_path)
 
     report_generator.generate_text_report(report_content)
+    
+    def clean_nan_values(data):
+        """
+        Replace NaN values with None recursively.
+        """
+
+        if isinstance(data, dict):
+            return {
+                key: clean_nan_values(value)
+                for key, value in data.items()
+            }
+
+        if isinstance(data, list):
+            return [
+                clean_nan_values(item)
+                for item in data
+            ]
+
+        if isinstance(data, float) and math.isnan(data):
+            return None
+
+        return data
+    
+    json_report = {
+        "missing_values": (
+            missing_report.to_dict()
+            if missing_report is not None else {}
+        ),
+        "schema_information": (
+            schema_report.to_dict()
+            if schema_report is not None else {}
+        ),
+        "statistics": (
+            statistics_report.to_dict()
+            if statistics_report is not None else {}
+        ),
+        "preprocessing_recommendations":
+            preprocessing_recommendations
+    }
+
+    cleaned_json_report = clean_nan_values(json_report)
+
+    report_generator.generate_json_report(
+        cleaned_json_report
+    )
 
 
 if __name__ == "__main__":
