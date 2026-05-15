@@ -102,10 +102,30 @@ class DatasetInspector:
         """
         Infer datatypes and schema structure.
         """
-        pass
+        schema_info = pd.DataFrame({
+            "column": self.dataset.columns,
+            "dtype": self.dataset.dtypes.astype(str),
+            "non_null_count": self.dataset.notnull().sum().values,
+            "null_count": self.dataset.isnull().sum().values,
+            "unique_values": self.dataset.nunique().values
+        })
+
+        print("\nSchema Information")
+        print("-" * 40)
+
+        print(schema_info)
+
+        return schema_info
 
     def generate_statistics(self):
         """
         Generate statistical summary.
         """
-        pass
+        print("\nStatistical Summary")
+        print("-" * 40)
+
+        statistics = self.dataset.describe(include="all")
+
+        print(statistics)
+
+        return statistics
