@@ -18,6 +18,8 @@ def main():
     schema_report = inspector.infer_schema()
 
     statistics_report = inspector.generate_statistics()
+    
+    preprocessing_recommendations = inspector.generate_preprocessing_recommendations()
 
     report_content = f"""
 DATASET INSPECTION REPORT
@@ -31,6 +33,9 @@ Schema Information:
 
 Statistical Summary:
 {statistics_report}
+
+Preprocessing Recommendations:
+{chr(10).join(preprocessing_recommendations)}
 """
 
     report_generator = ReportGenerator(
